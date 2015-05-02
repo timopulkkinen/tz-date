@@ -15,17 +15,40 @@ describe 'A TimeZoneDate', ->
     _.each samples, (sample) ->
       expect(sample.date.toString()).to.equal(sample.getters.toString)
 
+  it 'can be cloned', ->
+    date = createSampleDates()[0].date
+    clone = date.clone()
+    expect(date.toString()).to.equal(clone.toString())
+
   it 'can be queried', ->
     samples = createSampleDates()
     expect(samples).to.have.length.above(0)
     _.each samples, (sample) ->
       date = sample.date
+      expect(_.keys(sample.getters)).to.have.length.above(0)
       _.each sample.getters, (value, getter) ->
         actual = date[getter]()
         try
           expect(actual).to.equal(value)
         catch e
           console.error('Failed for getter ' + getter + ' and date ' + date.toString())
+          throw e
+
+  it 'can be modified', ->
+    samples = createSampleDates()
+    expect(samples).to.have.length.above(0)
+    _.each samples, (sample) ->
+      date = sample.date.clone()
+      expect(_.keys(sample.setters)).to.have.length.above(0)
+      _.each sample.setters, (value, setter) ->
+        try
+          getter = setter.replace(/^s/, 'g')
+          existing = date[getter]()
+          expect(existing).not.to.equal(value)
+          date[setter](value)
+          expect(date[getter]()).to.equal(value)
+        catch e
+          console.error('Failed for setter ' + setter + ' and date ' + date.toString())
           throw e
 
 # Test at least two different timezones in case the tests are run in one of them.
@@ -45,6 +68,22 @@ createSampleDates = ->
     getUTCMinutes: 15
     getUTCMonth: 4
     getUTCSeconds: 14
+  commonSetters =
+    setDate: 5
+    setFullYear: 2016
+    setHours: 20
+    setMilliseconds: 10
+    setMinutes: 20
+    setMonth: 5
+    setSeconds: 16
+    setTime: 1430550000000
+    setUTCDate: 5
+    setUTCFullYear: 2016
+    setUTCHours: 20
+    setUTCMilliseconds: 10
+    setUTCMinutes: 20
+    setUTCMonth: 5
+    setUTCSeconds: 16
   samples = [
     {
       date: new TimeZoneDate(dateStr, 'Australia/Melbourne')
@@ -67,5 +106,7 @@ createSampleDates = ->
         getUTCHours: 22
     }
   ]
-  _.each samples, (sample) -> _.extend(sample.getters, commonGetters)
+  _.each samples, (sample) ->
+    sample.getters = _.extend({}, commonGetters, sample.getters)
+    sample.setters = _.extend({}, commonSetters, sample.setters)
   samples

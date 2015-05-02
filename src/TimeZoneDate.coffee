@@ -1,6 +1,7 @@
 global = @
+isNode = module?.exports?
 
-moment = if module? then require('moment-timezone') else global.moment
+moment = if isNode then require('moment-timezone') else global.moment
 
 # Extending Date ensures `instanceof Date` is true and all methods are inherited.
 class TimeZoneDate extends Date
@@ -18,6 +19,19 @@ class TimeZoneDate extends Date
     else
       @_moment = moment(args)
 
+  _fromUtc: ->
+    @_moment = moment.tz(@_utcMoment, @_timeZone)
+    @_moment
+  _fromMomentArg: (arg) ->
+    @_moment = moment.tz(arg, @_timeZone)
+    @_getForSetter()
+  _getUtc: -> @_utcMoment ?= @_moment.clone().utc()
+  _getForSetter: ->
+    @_utcMoment = null
+    @_moment
+
+  # Getters
+
   getDate: -> @_moment.date()
   getDay: -> @_moment.day()
   getFullYear: -> @_moment.year()
@@ -28,20 +42,44 @@ class TimeZoneDate extends Date
   getSeconds: -> @_moment.seconds()
   getTime: -> @_moment.valueOf()
   getTimezoneOffset: -> @_moment.utcOffset()
-  getUTCDate: -> @_moment.clone().utc().date()
-  getUTCDay: -> @_moment.clone().utc().day()
-  getUTCFullYear: -> @_moment.clone().utc().year()
-  getUTCHours: -> @_moment.clone().utc().hours()
-  getUTCMilliseconds: -> @_moment.clone().utc().milliseconds()
-  getUTCMinutes: -> @_moment.clone().utc().minutes()
-  getUTCMonth: -> @_moment.clone().utc().month()
-  getUTCSeconds: -> @_moment.clone().utc().seconds()
+  getUTCDate: -> @_getUtc().date()
+  getUTCDay: -> @_getUtc().day()
+  getUTCFullYear: -> @_getUtc().year()
+  getUTCHours: -> @_getUtc().hours()
+  getUTCMilliseconds: -> @_getUtc().milliseconds()
+  getUTCMinutes: -> @_getUtc().minutes()
+  getUTCMonth: -> @_getUtc().month()
+  getUTCSeconds: -> @_getUtc().seconds()
   getYear: -> throw new Error('getYear() is deprecated - use getFullYear() instead.')
+
+  # Setters
+
+  setDate: (value) -> @_getForSetter().date(value)
+  setFullYear: (value) -> @_getForSetter().year(value)
+  setHours: (value) -> @_getForSetter().hours(value)
+  setMilliseconds: (value) -> @_getForSetter().milliseconds(value)
+  setMinutes: (value) -> @_getForSetter().minutes(value)
+  setMonth: (value) -> @_getForSetter().month(value)
+  setSeconds: (value) -> @_getForSetter().seconds(value)
+  setTime: (value) -> @_fromMomentArg(moment.unix(value / 1000))
+  setUTCDate: (value) -> @_fromUtc @_getUtc().date(value)
+  setUTCFullYear: (value) -> @_fromUtc @_getUtc().year(value)
+  setUTCHours: (value) -> @_fromUtc @_getUtc().hours(value)
+  setUTCMilliseconds: (value) -> @_fromUtc @_getUtc().milliseconds(value)
+  setUTCMinutes: (value) -> @_fromUtc @_getUtc().minutes(value)
+  setUTCMonth: (value) -> @_fromUtc @_getUtc().month(value)
+  setUTCSeconds: (value) -> @_fromUtc @_getUtc().seconds(value)
+  setYear: (value) -> throw new Error('setYear() is deprecated - use setFullYear() instead.')
 
   toString: -> @_moment.toString()
   valueOf: -> @_moment.toDate().getTime()
 
   getTimeZone: -> @_timeZone
   toLocalDate: -> @_moment.toDate()
+  clone: -> new TimeZoneDate(@_moment, @_timeZone)
+  equals: (other) -> @_moment.toString() == other.toString()
 
-if module? then module.exports = TimeZoneDate
+if isNode
+  module.exports = TimeZoneDate
+else if window?
+  window.TimeZoneDate = TimeZoneDate
