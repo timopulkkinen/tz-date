@@ -1,7 +1,7 @@
-global = @
 isNode = module?.exports?
-
-moment = if isNode then require('moment-timezone') else global.moment
+# Using a different variable name for moment to avoid re-declaring it in CoffeeScript and shadowing
+# the global variable.
+momentLib = if isNode then require('moment-timezone') else moment
 
 # Extending Date ensures `instanceof Date` is true and all methods are inherited.
 class TimeZoneDate extends Date
@@ -15,16 +15,16 @@ class TimeZoneDate extends Date
     if args.length == 1
       args = args[0]
     if timeZone
-      @_moment = moment.tz(args, timeZone)
+      @_moment = momentLib.tz(args, timeZone)
       @_timeZone = timeZone
     else
-      @_moment = moment(args)
+      @_moment = momentLib(args)
 
   _fromUtc: ->
-    @_moment = moment.tz(@_utcMoment, @_timeZone)
+    @_moment = momentLib.tz(@_utcMoment, @_timeZone)
     @_moment
   _fromMomentArg: (arg) ->
-    @_moment = moment.tz(arg, @_timeZone)
+    @_moment = momentLib.tz(arg, @_timeZone)
     @_getForSetter()
   _getUtc: -> @_utcMoment ?= @_moment.clone().utc()
   _getForSetter: ->
@@ -62,7 +62,7 @@ class TimeZoneDate extends Date
   setMinutes: (value) -> @_getForSetter().minutes(value)
   setMonth: (value) -> @_getForSetter().month(value)
   setSeconds: (value) -> @_getForSetter().seconds(value)
-  setTime: (value) -> @_fromMomentArg(moment.unix(value / 1000))
+  setTime: (value) -> @_fromMomentArg(momentLib.unix(value / 1000))
   setUTCDate: (value) -> @_fromUtc @_getUtc().date(value)
   setUTCFullYear: (value) -> @_fromUtc @_getUtc().year(value)
   setUTCHours: (value) -> @_fromUtc @_getUtc().hours(value)
