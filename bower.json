@@ -1,0 +1,19 @@
+{
+  "name": "tz-date",
+  "version": "0.2.0",
+  "homepage": "https://github.com/aramk/tz-date",
+  "authors": [
+    "Aram Kocharyan <akarmenia@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "moment-timezone": "~0.3.1"
+  }
+}
