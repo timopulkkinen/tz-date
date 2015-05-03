@@ -8,8 +8,9 @@ class TimeZoneDate extends Date
 
   constructor: ->
     args = Array.prototype.slice.call(arguments)
+    lastArg = args[args.length - 1]
     timeZone = undefined
-    if args.length > 1 && typeof args[args.length - 1] == 'string'
+    if args.length > 1 && (!lastArg? || typeof lastArg == 'string')
       timeZone = args.pop()
     if args.length == 1
       args = args[0]
@@ -41,7 +42,7 @@ class TimeZoneDate extends Date
   getMonth: -> @_moment.month()
   getSeconds: -> @_moment.seconds()
   getTime: -> @_moment.valueOf()
-  getTimezoneOffset: -> @_moment.utcOffset()
+  getTimezoneOffset: -> -@_moment.utcOffset()
   getUTCDate: -> @_getUtc().date()
   getUTCDay: -> @_getUtc().day()
   getUTCFullYear: -> @_getUtc().year()

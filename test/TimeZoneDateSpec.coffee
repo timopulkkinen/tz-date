@@ -90,7 +90,7 @@ createSampleDates = ->
       getters:
         toString: 'Sat May 02 2015 18:15:14 GMT+1000'
         getTime: 1430554514000
-        getTimezoneOffset: 600
+        getTimezoneOffset: -600
         getUTCDate: 2
         getUTCDay: 6
         getUTCHours: 8
@@ -100,7 +100,7 @@ createSampleDates = ->
       getters:
         toString: 'Sat May 02 2015 18:15:14 GMT-0400'
         getTime: 1430604914000
-        getTimezoneOffset: -240
+        getTimezoneOffset: 240
         getUTCDate: 2
         getUTCDay: 6
         getUTCHours: 22
