@@ -88,7 +88,7 @@ createSampleDates = ->
     {
       date: new TimeZoneDate(dateStr, 'Australia/Melbourne')
       getters:
-        toString: 'Sat May 02 2015 18:15:14 GMT+1000'
+        toString: 'Sat May 02 2015 18:15:14 GMT+1000 (AEST)'
         getTime: 1430554514000
         getTimezoneOffset: -600
         getUTCDate: 2
@@ -98,7 +98,7 @@ createSampleDates = ->
     {
       date: new TimeZoneDate(dateStr, 'America/New_York')
       getters:
-        toString: 'Sat May 02 2015 18:15:14 GMT-0400'
+        toString: 'Sat May 02 2015 18:15:14 GMT-0400 (EDT)'
         getTime: 1430604914000
         getTimezoneOffset: 240
         getUTCDate: 2

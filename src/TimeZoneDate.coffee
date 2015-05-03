@@ -72,7 +72,15 @@ class TimeZoneDate extends Date
   setUTCSeconds: (value) -> @_fromUtc @_getUtc().seconds(value)
   setYear: (value) -> throw new Error('setYear() is deprecated - use setFullYear() instead.')
 
-  toString: -> @_moment.toString()
+  toString: ->
+    if @_timeZone
+      str = @_moment.toString()
+      abbr = @_moment.zoneAbbr()
+      if abbr
+        str = str + " (#{abbr})"
+      str
+    else
+      @_moment.toDate().toString()
   valueOf: -> @_moment.toDate().getTime()
 
   getTimeZone: -> @_timeZone
