@@ -82,6 +82,7 @@ class TimeZoneDate extends Date
     else
       @_moment.toDate().toString()
   valueOf: -> @_moment.toDate().getTime()
+  toJSON: -> @toString()
 
   getTimeZone: -> @_timeZone
   toLocalDate: -> @_moment.toDate()
