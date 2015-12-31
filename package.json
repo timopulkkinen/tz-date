@@ -1,6 +1,6 @@
 {
   "name": "tz-date",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A Date class in JavaScript with support for time zones.",
   "author": "Aram Kocharyan <akarmenia@gmail.com>",
   "directories": {
