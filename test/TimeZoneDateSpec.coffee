@@ -9,6 +9,16 @@ describe 'A TimeZoneDate', ->
     expect(date).not.to.equal(null)
     expect(date.toString()).not.to.equal(null)
 
+  it 'can be constructed from a string with a timezone', ->
+    date = new Date('Fri Jun 12 2015 11:14:42 GMT+1000 (AEST)')
+    # Deprecated
+    # date2 = new TimeZoneDate('Fri Jun 12 2015 11:14:42 GMT+1000 (AEST)')
+    # date3 = new TimeZoneDate('Fri Jun 12 2015 11:14:42 GMT+1000 (AEST)', 'Australia/Melbourne')
+    date2 = new TimeZoneDate('2015-06-12T11:14:42+10:00')
+    date3 = new TimeZoneDate('2015-06-12T11:14:42+10:00', 'Australia/Melbourne')
+    expect(date.toString()).to.equal(date2.toString())
+    expect(date.toString()).to.equal(date3.toString())
+
   it 'can be constructed with a timezone', ->
     samples = createSampleDates()
     expect(samples).to.have.length.above(0)

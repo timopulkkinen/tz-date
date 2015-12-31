@@ -1,4 +1,4 @@
-isNode = !Package?
+isNode = !Package? and module?.exports?
 # Using a different variable name for moment to avoid re-declaring it in CoffeeScript and shadowing
 # the global variable.
 _moment = if isNode then require('moment-timezone') else moment
