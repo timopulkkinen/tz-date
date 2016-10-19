@@ -16,8 +16,27 @@ describe 'A TimeZoneDate', ->
     # date3 = new TimeZoneDate('Fri Jun 12 2015 11:14:42 GMT+1000 (AEST)', 'Australia/Melbourne')
     date2 = new TimeZoneDate('2015-06-12T11:14:42+10:00')
     date3 = new TimeZoneDate('2015-06-12T11:14:42+10:00', 'Australia/Melbourne')
+
+
+
+    # we should get the time in current system timezone
     expect(date.toString()).to.equal(date2.toString())
-    expect(date.toString()).to.equal(date3.toString())
+    # parsed epoch should be the same for both
+    expect(date2.getTime() == date3.getTime())
+
+    #  argument list handling
+  it 'can be constructed from varargs with or without timezone', ->
+    date = new Date('Fri Jun 12 2015 11:14:42')
+    date2 = new Date(2015, 5, 12, 11, 14, 42)
+
+    tzDate = new TimeZoneDate(2015, 5, 12, 11, 14, 42)
+    tzDate2 = new TimeZoneDate(2015, 5, 12, 11, 14, 42, 'Australia/Melbourne')
+    tzDate3 = new TimeZoneDate('2015-06-12T11:14:42', 'Australia/Melbourne')
+
+    expect(date.toString()).to.equal(tzDate.toString())
+    expect(date2.toString()).to.equal(tzDate.toString())
+
+    expect(tzDate2.toString()).to.equal(tzDate3.toString())
 
   it 'can be constructed with a timezone', ->
     samples = createSampleDates()

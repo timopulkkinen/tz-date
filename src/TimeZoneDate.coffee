@@ -6,19 +6,27 @@ _moment = if isNode then require('moment-timezone') else moment
 # Extending Date ensures `instanceof Date` is true and all methods are inherited.
 class TimeZoneDate extends Date
 
+
+
   constructor: ->
     args = Array.prototype.slice.call(arguments)
-    lastArg = args[args.length - 1]
-    timeZone = undefined
-    if args.length > 1 && (!lastArg? || typeof lastArg == 'string')
-      timeZone = args.pop()
     if args.length == 1
       args = args[0]
+    lastArg = args[args.length - 1]
+    timeZone = undefined
+    if Array.isArray(args) && args.length > 1 && (!lastArg? || typeof lastArg == 'string')
+      timeZone = args.pop()
     if timeZone
-      @_moment = _moment.tz(args, timeZone)
+      if args.length == 1
+        @_moment = _moment.tz(args[0], timeZone)
+      else
+        @_moment = _moment.tz(args, timeZone)
       @_timeZone = timeZone
     else
-      @_moment = _moment(args)
+      if args.length == 1
+        @_moment = _moment(args[0])
+      else
+        @_moment = _moment(args)
 
   _fromUtc: ->
     @_moment = _moment.tz(@_utcMoment, @_timeZone)
